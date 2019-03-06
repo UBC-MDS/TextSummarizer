@@ -53,20 +53,31 @@ def test_verify_output():
     assert type(ex_output.avg_word_len[0]) == numpy.float64 and ex_output.avg_word_len[0] >= 0
     assert type(ex_output.avg_sentence_len[0]) == numpy.float64 and ex_output.avg_sentence_len[0] >= 0
 
+def test_verfiy_output2():
+    ex_passage = ""
+    ex_output = text_summarize(ex_passage, stop_remove = True, \
+                               remove_punctuation = False, remove_number = False, case_sensitive = True)
+    assert ex_output.word_count[0] == 0
+    assert ex_output.sentence_count[0] == 0
+    assert ex_output.most_common[0] == []
+    assert set(ex_output.least_common[0]) == set([])
+    assert ex_output.avg_word_len[0] == 0.0
+    assert ex_output.avg_sentence_len[0] == 0.0
+
 
 def test_verify_input():
     # Test if input is string
     test = 100
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(TypeError) as e:
         text_summarize(test)
     assert str(e.value) == "Input must be a string"
     
 def test_verify_input2():
     # Test if parameters are boolean
     ex_passage = "This is the first sentence in this paragraph. This is the second sentence. This is the third."
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(TypeError) as e:
         text_summarize(ex_passage, 13)
-    assert str(e.value) == "Test parameters must be boolean."
+    assert str(e.value) == "stop_remove, remove_punctuation, remove_number and case_sensitive must be boolean"
     
 def test_all_stop_words():
     # Test if text is empty after stopword removal
@@ -83,10 +94,6 @@ def test_word_count():
     # Test if hyphens count as one or two words
     test = "compound-word"
     assert text_summarize(test).word_count[0] == 1
-    # Test blank
-    test = " "
-    with pytest.raises(ValueError) as e:
-        text_summarize(test)
     # Test if numbers count as words
     test = "60 and 9 people in MDS"
     assert text_summarize(test).word_count[0] == 4
@@ -104,10 +111,6 @@ def test_most_common():
     # Test multiple most common words (same case as no most common word)
     test = "most most common common common"
     assert set(text_summarize(test).most_common[0]) == set(["common"])
-    # Test blank
-    test = ""
-    with pytest.raises(ValueError) as e:
-        text_summarize(test)
     # Check if punctuation/special characters count
     test = "most most most common!!!!! + + + + + "
     assert text_summarize(test).most_common[0] == ['most']
