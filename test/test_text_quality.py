@@ -69,7 +69,8 @@ def test_verify_input1():
 
     with pytest.raises(TypeError) as e:
         text_quality(text)
-    assert str(e.value) == "expected string or bytes-like object"
+
+    assert str(e.value) == "Input must be a string"
 
 
 

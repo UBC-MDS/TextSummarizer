@@ -24,6 +24,12 @@ def test_normal_function():
     assert ex_output["2gram"][0] ==  sample_out['2gram'][0]
     assert  len(ex_output['2gram'][0]) == n[0]
     assert  ex_output.shape[0] == sample_out.shape[0]
+
+    n=2
+    ex_output = text_grams(ex, k, n)
+    ex_output
+    assert ex_output["2gram"][0] ==  ("sunny","day")
+    assert  ex_output["Number of Instances"][0] == 2
 #test_normal_function()
 
 # test datatype inside output dataframe
@@ -81,17 +87,34 @@ def test_verify_k():
     with pytest.raises(ValueError) as e:
         text_grams(ex, k = -1)
     assert str(e.value) == "k must be 0 or greater"
+    
+    with pytest.raises(TypeError) as e:
+        text_grams(ex, k = "text")
+    assert str(e.value) == "k must be integer."
 
 # test invalid values of n
 def test_verify_n():
     ex = "Wherefore art thou Romeo! Wherefore art thou Romeo. Wherefore art thou Romeo?"  
-    with pytest.raises(ValueError) as e:
-        text_grams(ex, n = [])  
-    assert str(e.value) == "n must have at least one positive value"
+    with pytest.raises(TypeError) as e:
+        text_grams(ex, n = "text")  
+    assert str(e.value) == "n must be an integer list"
 
     with pytest.raises(ValueError) as e:
-        text_grams(ex, n = [-1])
+        text_grams(ex, n = [-1,-2])
     assert str(e.value) == "Values of n must be greater than 0"
+    
+    with pytest.raises(ValueError) as e:
+        text_grams(ex, n = -1)
+    assert str(e.value) == "n must be 0 or greater"
+    
+    
+
+# test invalid values of n
+def test_verify_bool():
+    ex = "Wherefore art thou Romeo! Wherefore art thou Romeo. Wherefore art thou Romeo?"  
+    with pytest.raises(TypeError) as e:
+        text_grams(ex, stop_remove = "text")  
+    assert str(e.value) == "stop_remove, remove_punctuation, remove_number and case_sensitive must be boolean"
 
 
 # test if sentence length is smaller than n
@@ -109,13 +132,27 @@ def test_verify_input1():
 
     text = 100
     
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(TypeError) as e:
         text_grams(text)
     assert str(e.value) == "Input must be a string"
 
 
 # test to verify if function raises for invalid input
 def test_verify_input2():
+
+    """
+    Test if input is not empty
+    """
+
+    text = " "
+
+    with pytest.raises(ValueError) as e:
+        text_grams(text)
+    assert str(e.value) == "Input text is empty."
+    
+
+# test to verify if function raises for invalid input
+def test_verify_input3():
 
     """
     Test if input is not empty

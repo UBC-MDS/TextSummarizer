@@ -5,8 +5,8 @@
 Created on 09 February, 2019
 
 
-@author: Harjyot Kaur
-         Yenan Zhang
+@author: Alex Pak
+         Harjyot Kaur
 
 
 Implementation of text_grams function
@@ -112,7 +112,7 @@ def pre_processing(text, case_sensitive = False, stop_remove = True):
     return text
 
 
-def text_grams(text, k = 5, n = [2, 3], stop_remove = True, lemitize = False, remove_punctuation = True, \
+def text_grams(text, k = 5, n = [2, 3], stop_remove = True, remove_punctuation = True, \
                remove_number = True, case_sensitive = False):
 
     """
@@ -129,17 +129,13 @@ def text_grams(text, k = 5, n = [2, 3], stop_remove = True, lemitize = False, re
     n:  list
         number of combination of words with highest frequency
 
-    stopwords_remove : Boolean
+    stop_remove : Boolean
         Remove common stop words (ex. 'and', 'the', 'him') from `text`.
-
-    lemmatize : Boolean
-        If True, lemmatize every word in `text`.
-        More info for how lemmatize works can be found in NLTK docs.
 
     remove_punctuation : Boolean
         If True, strip `text` of punctuation.
 
-    remove_numbers : Boolean
+    remove_number : Boolean
         If True, strip `text` of numbers.
 
     case_sensitive : Boolean
@@ -149,24 +145,8 @@ def text_grams(text, k = 5, n = [2, 3], stop_remove = True, lemitize = False, re
     Returns
     -------
     DataFrame
-        word_count : Int
-            The total number of words in `passage`.
-        sentence_count : Int
-            the total number of sentences in `passage`.
-        most_common : List of String
-            A list of the most common words in `passage`. If this returns a
-            list of length 1, there is only one most common word. If this
-            returns a list of length > 1, there are multiple words that appear
-            the most number of times in `passage`.
-        least_common : List of String
-            A list of the least common words in `passage`. If this returns a
-            list of length 1, there is only one least common word. If this
-            returns a list of length > 1, there are multiple words that appear
-            the least number of times in `passage`.
-        avg_word_len : float
-            The average word length in `passage`.
-        avg_sentence_len : float
-            The average number of words in a sentence, in `passage`.
+        ngram: top k combination of n words
+        frequency: frequenct of the occurrence of ngram in text
 
     Examples
     --------
@@ -185,28 +165,52 @@ def text_grams(text, k = 5, n = [2, 3], stop_remove = True, lemitize = False, re
 
     # Check if text is a string
     if type(text) != str:
-        raise ValueError("Input must be a string")
+        raise TypeError("Input must be a string")
+        
     # Check text is not empty
     if not text.split():
         raise ValueError("Input text is empty.")
-    # Check k >= 0
+        
+    # Check for type of k
+    if type(k)!=int and type(k)!='numpy.int64':
+        raise TypeError("k must be integer.")
+        
+     # Check k >= 0
     if k < 0:
         raise ValueError("k must be 0 or greater")
-    # Check n is not empty
-    if not n:
-        raise ValueError("n must have at least one positive value")
-    # Check all valid values of n
-    if len(n) > 0 and any(i < 0 for i in n):
-        raise ValueError("Values of n must be greater than 0")
-
-
-
-
-    # Initialize variables
+    
+    # Check for n
+    if type(n)!=int and type(n)!='numpy.int64' and type(n)!=list:
+        raise TypeError("n must be an integer list")
+            
+    if type(n)==list:
+        if any(i < 0 for i in n):
+             raise ValueError("Values of n must be greater than 0")
+                
+    # Check for boolean agruments
+    if type(stop_remove)!= bool or type(remove_punctuation)!=bool or\
+               type(remove_number)!= bool or type(case_sensitive)!= bool:
+        raise TypeError("stop_remove, remove_punctuation, remove_number and case_sensitive must be boolean")
+    
+    
+    
     ngrams_list = []
     ngrams_dfs = []
-    lbls = [str(num_grams) + "gram" for num_grams in n]  # Make labels for every n grams user wants
-
+    
+    try:
+        # Initialize variables
+       
+        lbls = [str(num_grams) + "gram" for num_grams in n]  # Make labels for every n grams user wants
+        pass
+        
+    except TypeError:
+        if n>0:
+            n=[n]
+            # Initialize variables
+            lbls = [str(num_grams) + "gram" for num_grams in n]  # Make labels for every n grams user wants
+        else:
+            raise ValueError("n must be 0 or greater")
+                    
     # Clean and pre-process text
     clean_text = clean(text, remove_punctuation, remove_number)
     clean_text = pre_processing(clean_text, case_sensitive, stop_remove)
