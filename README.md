@@ -12,6 +12,9 @@ Text Summarization in Python
 | Alexander Pak | [pak-alex](https://github.com/pak-alex) |
 | Yenan Zhang |[YenanZ](https://github.com/YenanZ)  |
 
+## Successful Travis build
+
+[![Build Status](https://travis-ci.org/UBC-MDS/PySyntext.svg?branch=master)](https://travis-ci.org/UBC-MDS/PySyntext)
 
 ## Summary
 
