@@ -6,22 +6,28 @@ from collections import Counter
 from nltk.corpus import stopwords
 import pytest
 
+
+
 def clean(text, remove_punctuation = True, remove_number = True):
     """
     Remove tickers, special characters, links and numerical strings
 
     Parameters
     ----------
+
     text : str
         User given input
+
     remove_punctuation : Boolean
         Check if user would like to remove punctuation
+
     remove_number : Boolean
         Check if user would like to remove numerical strings
 
     Returns
     -------
     str
+
         cleaned text
 
     Examples
@@ -31,7 +37,6 @@ def clean(text, remove_punctuation = True, remove_number = True):
 
     'RT   Amila  TestTom s newly listed Co   amp  Mary s unlisted Group to supply tech for nlTK h'
     """
-
     # Need to keep periods, question marks, and exclamation marks for sentence endings
     punct_wo_endings = string.punctuation.replace('.', '').replace('!', '').replace('?', '')
 
@@ -40,9 +45,12 @@ def clean(text, remove_punctuation = True, remove_number = True):
     remove_newline=re.sub(r'\n','',remove_tickers)
     remove_links=re.sub(r'https?:\/\/.*\/\w*','',remove_newline)
 
+
+
     # Check if user wants to remove punctuation
     if remove_punctuation:
         remove_punctuation=remove_links.translate({ord(char): None for char in punct_wo_endings})
+
     else:
         remove_punctuation = remove_links
 
@@ -62,6 +70,7 @@ def clean(text, remove_punctuation = True, remove_number = True):
         rx = re.compile(numeric_const_pattern, re.VERBOSE)
         remove_numeric_words = rx.sub('',remove_punctuation)
         remove_punctuation = ' '.join(remove_punctuation.strip().split())
+
     else:
         remove_numeric_words = remove_punctuation
 
@@ -69,17 +78,23 @@ def clean(text, remove_punctuation = True, remove_number = True):
 
     return clean_text
 
+
+
 def pre_processing(text, case_sensitive = False, stop_remove = False):
+
     """
     Checks if user wants to make all strings lower case, and if user wants to remove
     stop words
 
     Parameters
     ----------
+
     text : str
         User given input
+
     case_sensitive : Boolean
         Check if user would like to treat Upper and lower case separately
+
     stop_remove : Boolean
         Check if user would like to remove stop words
 
@@ -99,8 +114,10 @@ def pre_processing(text, case_sensitive = False, stop_remove = False):
     # If text is case_sensitive, do NOT change everything to lower case
     if not case_sensitive:
         text = text.lower()
+
     # Remove stop words if conditional is true
     if stop_remove:
+
         pattern = re.compile(r'\b(' + r'|'.join(stopwords.words('english')) + r')\b\s*')
         text = pattern.sub('', text)
 
@@ -118,45 +135,56 @@ def text_summarize(text, stop_remove = False, remove_punctuation = True, \
     word length, and average sentence length. Each information resides
     in a separate column.
 
+
+
     Parameters
     ----------
+
     text : String
         The string to be analyzed.
-    stopwords_remove : Boolean
+
+    stop_remove : Boolean
         Remove common stop words (ex. 'and', 'the', 'him') from `text`.
-    lemmatize : Boolean
-        If True, lemmatize every word in `text`.
-        More info for how lemmatize works can be found in NLTK docs.
+
     remove_punctuation : Boolean
         If True, strip `text` of punctuation.
-    remove_numbers : Boolean
+
+    remove_number : Boolean
         If True, strip `text` of numbers.
+
     case_sensitive : Boolean
         If True, text_summarize will be case sensitive (ex. "this" and
         "This" will be two separate words).
-    gibberish_remove : Boolean
-        Remove words that are not actually words in the English language
-        (ex. any spelling mistakes, slang).
+
 
     Returns
     -------
+
     DataFrame
+
         word_count : Int
             The total number of words in `text`.
+
         sentence_count : Int
             the total number of sentences in `text`.
+
         most_common : List of String
+
             A list of the most common words in `text`. If this returns a
             list of length 1, there is only one most common word. If this
             returns a list of length > 1, there are multiple words that appear
             the most number of times in `text`.
+
         least_common : List of String
+
             A list of the least common words in `text`. If this returns a
             list of length 1, there is only one least common word. If this
             returns a list of length > 1, there are multiple words that appear
             the least number of times in `text`.
+
         avg_word_len : float
             The average word length in `text`.
+
         avg_sentence_len : float
             The average number of words in a sentence, in `text`.
 
@@ -167,6 +195,7 @@ def text_summarize(text, stop_remove = False, remove_punctuation = True, \
     >>> PySyntext.text_summarize(ex_passage)
 
     # Example output, generate a dict then turn it into the output DataFrame
+
     answer = {
         'word_count' : 17,
         'sentence_count' : 3,
@@ -179,18 +208,19 @@ def text_summarize(text, stop_remove = False, remove_punctuation = True, \
     """
      # Check all variables are valid:
 
-    # Check parameters are boolean
-    if type(stop_remove) != bool or type(remove_punctuation) != bool or type(remove_number) != bool or type(case_sensitive) != bool:
-        raise ValueError("Test parameters must be boolean.")
     # Check if text is a string
     if type(text) != str:
-        raise ValueError("Input must be a string")
-    # Check text is not empty
-    if not text.split():
-        raise ValueError("Input text is empty.")
+        raise TypeError("Input must be a string")
+
+    # Check for boolean agruments
+    if type(stop_remove)!= bool or type(remove_punctuation)!=bool or\
+               type(remove_number)!= bool or type(case_sensitive)!= bool:
+        raise TypeError("stop_remove, remove_punctuation, remove_number and case_sensitive must be boolean")
+
 
 
     # Clean and pre-process text
+
     clean_text = clean(text, remove_punctuation, remove_number)
     processed_text = pre_processing(clean_text, case_sensitive, stop_remove)
 
@@ -201,8 +231,8 @@ def text_summarize(text, stop_remove = False, remove_punctuation = True, \
                 'avg_word_len': 0.0,
                 'avg_sentence_len': 0.0}
 
-
     # count number of sentences
+
     if case_sensitive:
         pat = re.compile(r'([A-Z][^\.!?]*[\.!?])', re.M)
     else:
@@ -216,18 +246,16 @@ def text_summarize(text, stop_remove = False, remove_punctuation = True, \
     else:
         text_summary['avg_sentence_len']=sum(map(len, sentences))/float(len(sentences))
 
-
     # remove sentence ending punctuations
     processed_text=re.sub(r'[\.!?]', '', processed_text)
 
     # split text
     split_text=processed_text.split()
 
-
     if len(split_text)!=0:
+
         # word count
         text_summary['word_count'] = len(split_text)
-
         # most common and least words
         counter=Counter(split_text)
         df = pd.DataFrame.from_dict(counter, orient='index').reset_index()
@@ -236,8 +264,7 @@ def text_summarize(text, stop_remove = False, remove_punctuation = True, \
 
         # average word length
         text_summary['avg_word_len']= sum(map(len, split_text))/float(len(split_text))
-        #sum(len(word) for word in split_passage) / len(split_passage)
-
 
     # return list
+
     return pd.DataFrame(text_summary)
