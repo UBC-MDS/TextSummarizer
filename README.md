@@ -1,22 +1,18 @@
+<img src="img/PySyntext_logo.PNG" width="200" align = "right">
+
 # PySyntext
-
-<img src="img/logo.PNG" align="right" height="150" width="150"/>
-
-Text Summarization in Python
-
-## Contributors
-
-|Name | Github |
-|---|---|
-| Harjyot Kaur |[harjyotkaur](https://github.com/HarjyotKaur)  |
-| Alexander Pak | [pak-alex](https://github.com/pak-alex) |
-| Yenan Zhang |[YenanZ](https://github.com/YenanZ)  |
-
-## Successful Travis build
 
 [![Build Status](https://travis-ci.org/UBC-MDS/PySyntext.svg?branch=master)](https://travis-ci.org/UBC-MDS/PySyntext)
 
-## Summary
+Text Summarization in Python
+
+### Contributors
+
+| [Harjyot Kaur](https://github.com/HarjyotKaur) | [Alexander Pak](https://github.com/pak-alex) | [Yenan Zhang](https://github.com/YenanZ)|
+|:------------:|:--------------:|:--------------:|
+
+
+## Overview
 
 There are many packages that cover summary statistics for numerical data. However, when it comes to text data, there is a lack of selection for packages of similar functionality. Our group would like to tackle this problem by creating `PySyntext`. This package will allow users to input passages and receive summary information and quality analysis of the text, giving the user valuable information on how best to proceed with their data.
 
@@ -38,6 +34,7 @@ Sample functionality included in this package for a given text passage:
 
  `pip install git+https://github.com/UBC-MDS/PySyntext.git`
 
+*Note: To avoid errors download `nltk.download('stopwords')`*
 
 
 ## Functionality and Usage:
@@ -83,12 +80,9 @@ PySyntext.text_summarize(text)
 
 ```
 
-Output
--------
+#### Output
 
-|word_count|sentence_count|most_common|least_common|avg_word_len|avg_sentence_len|
-|---|---|---|---|---|---|
-|17|3|[this]|[first, in, paragraph, second, third]|4.352941|30.333333|
+![](img/text_summarize_ex.PNG)
 
 <br>
 
@@ -131,16 +125,9 @@ text="This is the first sentence in this paragraph. This is the second sentence.
 PySyntext.text_grams(text)
 
 ```
+#### Output
 
-
-Output
--------
-
-|2gram|Number of Instances|3gram|Number of Instances|
-|---|---|---|---|
-|(first, sentence)|1|(first, sentence, paragraph)|1|
-|(sentence, paragraph)|1|NaN|NaN|
-|(second, sentence)|1|NaN|NaN`
+![](img/text_grams_ex.PNG)
 
 <br>
 
@@ -184,19 +171,15 @@ text="This is the wrng. This is shitty."
 PySyntext.text_quality(text)
 
 ```
+#### Output
 
-Output
--------
-
-|spell_error|count_spell_error|proportion_spell_error|toxic_words|count_toxic_words|proportion_toxic_words|
-|---|---|---|---|---|---|
-|{wrng}|1|0.142857|{shitty}|1|0.142857|
+![](img/text_quality_ex.PNG)
 
 <br>
 
 ## Test Coverage:
 
-![](img/PySyntext_Coverage.PNG)
+![](img/PySyntext_FinalCoverage.PNG)
 
 
 ## Dependencies
@@ -204,3 +187,4 @@ Output
 * pandas
 * numpy
 * nltk
+* nltk('stopwords')
