@@ -179,7 +179,7 @@ PySyntext.text_quality(text)
 
 ## Test Coverage:
 
-![](img/PySyntext_Coverage.PNG)
+![](img/PySyntext_FinalCoverage.PNG)
 
 
 ## Dependencies
