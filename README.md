@@ -82,7 +82,7 @@ PySyntext.text_summarize(text)
 
 #### Output
 
-![](img\text_summarize_ex.PNG)
+![](img/text_summarize_ex.PNG)
 
 <br>
 
@@ -127,7 +127,7 @@ PySyntext.text_grams(text)
 ```
 #### Output
 
-![](img\text_grams_ex.PNG)
+![](img/text_grams_ex.PNG)
 
 <br>
 
@@ -173,7 +173,7 @@ PySyntext.text_quality(text)
 ```
 #### Output
 
-![](img\text_quality_ex.PNG)
+![](img/text_quality_ex.PNG)
 
 <br>
 
